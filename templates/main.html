@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Automated Essay Scoring</title>
+  <style>
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+  
+    </style>
+</head>
+<body style="background:essay.jpeg">
+  <center>
+  <h1>Automated Essay Scoring</h1>
+  
+  <form id="essayForm"  enctype="multipart/form-data" >
+   <!--{% csrf_token %}-->
+    <p>Choose input type:</p>
+  <input type="radio" id="html" name="user_selection" value="Inputfile">
+  <label for="html">upload text file</label><br>
+  <input type="radio" id="css" name="user_selection" value="Inputstr">
+  <label for="css">Insert text</label><br>
+    <label for="essay">Enter your essay:</label>
+    <textarea id="essay"name="essay" rows="10" cols="50"></textarea>><br><br>
+    
+    <label for="pdfFile">Upload PDF:</label>
+    <input type="file" name="pdfFile" id="pdfFile" accept="application/pdf">
+    <button type='button' onclick="scoreEssay()">Submit</button>
+  </form>
+  <h2>Score:</h2>
+  <div id="scoreResult" style="display: none;">
+    
+    <p id="score"></p>
+  </div>
+</center>
+  <script>
+    
+    function scoreEssay() {
+      var xhr = new XMLHttpRequest();
+      var formData = new FormData(document.getElementById("essayForm"));
+    
+      xhr.open('POST', 'essayscoring', true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          // Display the scoring result
+          var response = xhr.responseText; // Assuming the response contains the rounded score
+          document.getElementById('score').textContent = response;
+          document.getElementById('scoreResult').style.display = 'block';
+        }
+      };
+      
+      xhr.send(formData);
+    }
+   </script>
+</body>
+</html>
